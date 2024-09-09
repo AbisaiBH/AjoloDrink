@@ -16,7 +16,7 @@ class Cocktail(models.Model):
     )
     ALCOHOL_CHOICES = (
         (1, 'LOW'),
-        (2, 'MID'),
+        (2, 'MEDIUM'),
         (3, 'HIGH')
     )
     season = models.IntegerField(choices=SEASON_CHOICES)
@@ -26,7 +26,18 @@ class Cocktail(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_season_display(self):
+        return dict(self.SEASON_CHOICES).get(self.season, 'Unknown')
 
+    def get_alcohol_lvl_display(self):
+        return dict(self.ALCOHOL_CHOICES).get(self.alcohol_lvl, 'Unknown')
+    
+    @classmethod
+    def get_season_value(cls, season_name):
+        choices_dict = {name: value for value, name in cls.SEASON_CHOICES}
+        return choices_dict.get(season_name, 0)
+    
 class Cocktail_detail(models.Model):
     uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     images = models.JSONField()
